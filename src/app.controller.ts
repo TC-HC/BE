@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -11,16 +11,16 @@ export class AppController {
   }
 
   @Post("Make")
-  mkPost(): string{
-    return this.appService.mkPost();
+  mkPost(@Body() post){
+    return this.appService.mkPost(post.postID, post.userID, post.writer, post.title, post.content);
   }
 
   @Post("Update")
-  upPost(): string{
-    return this.appService.upPost();
+  upPost(@Body() post){
+    return this.appService.upPost(post.postID, post.userID);
   }
 
-  @Get("Remove")
+  @Post("Remove")
   rmPost(): string{
     return this.appService.rmPost();
   }
