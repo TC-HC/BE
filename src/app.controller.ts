@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put } from '@nestjs/common';
 import { AppService } from './app.service';
+import { CreatePostDto } from './dto/create-post.dto'
 
 @Controller()
 export class AppController {
@@ -12,21 +13,21 @@ export class AppController {
 
   @Post("Make")
   mkPost(@Body() post){
-    return this.appService.mkPost(post.postID, post.userID, post.writer, post.title, post.content);
+    return this.appService.mkPost(post);
   }
 
-  @Post("Update")
+  @Put("Update")
   upPost(@Body() post){
-    return this.appService.upPost(post.postID, post.userID);
+    return this.appService.upPost(post.postID, post.userID, post.title, post.content);3
   }
 
-  @Post("Remove")
-  rmPost(): string{
-    return this.appService.rmPost();
+  @Delete("Remove")
+  rmPost(@Body() post): {
+    return ;
   }
 
   @Get("Check")
-  checkPost(): string{
-    return this.appService.checkPost();
+  checkPost(@Body() post){
+    return this.appService.checkPost(post.postID);
   }
 }
