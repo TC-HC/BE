@@ -36,8 +36,14 @@ export class AppService {
     return post;
   }
 
-  upPost(postID: number, userID: number, title, content) {
-    return "updated";
+  upPost(dto: CreatePostDto) {
+    const post = this.posts.find(p => p.postID === dto.postID)
+    if(post){
+      post.title = dto.title;
+      post.content = dto.content;
+      return "updated"
+    }
+    else return "post not found";
   }
 
   rmPost(dto: CreatePostDto) {

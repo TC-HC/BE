@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Put, Delete } from '@nestjs/common';
 import { AppService, post } from './app.service';
 import { CreatePostDto } from './dto/create-post.dto'
-import e from 'express';
 
 @Controller()
 export class AppController {
@@ -13,11 +12,11 @@ export class AppController {
   }
 
   @Put("Update")
-  upPost(@Body() post){
-    return this.appService.upPost(post.postID, post.userID, post.title, post.content);3
+  upPost(@Body() dto: CreatePostDto){
+    return this.appService.upPost(dto);
   }
 
-  @Delete("delete")
+  @Delete("Delete")
   rmPost(@Body() dto: CreatePostDto){
     return this.appService.rmPost(dto);
   }
