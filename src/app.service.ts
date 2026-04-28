@@ -19,10 +19,6 @@ export class AppService {
     content: "Hello World",
   },
 ];
-  
-  getHello(): string {
-    return 'Hello World!';
-  }
 
   private toPost(dto: CreatePostDto) : post {
     return {
@@ -35,21 +31,21 @@ export class AppService {
   }
 
   mkPost(dto: CreatePostDto) {
-    const post:post = this.toPost(dto);
+    const post: post = this.toPost(dto);
     this.posts.push(post)
     return post;
   }
 
   upPost(postID: number, userID: number, title, content) {
-    return ;
+    return "updated";
   }
 
-  rmPost(postID: number) {
-    this.posts = this.posts.filter(p => p.postID !== postID);
+  rmPost(dto: CreatePostDto) {
+    this.posts = this.posts.filter(p => p.postID !== dto.postID);
     return "deleted";
   }
 
-  checkPost(postID: number) {
-    return this.posts.find(p => p.postID === postID);
+  checkPost(dto: CreatePostDto) {
+    return this.posts.find(p => p.postID === dto.postID);
   }
 }

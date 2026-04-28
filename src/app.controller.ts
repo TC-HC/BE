@@ -1,19 +1,15 @@
-import { Controller, Get, Post, Body, Put } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Post, Body, Put, Delete } from '@nestjs/common';
+import { AppService, post } from './app.service';
 import { CreatePostDto } from './dto/create-post.dto'
+import e from 'express';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get("hello")
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
   @Post("Make")
-  mkPost(@Body() post){
-    return this.appService.mkPost(post);
+  mkPost(@Body() dto: CreatePostDto){
+    return this.appService.mkPost(dto);
   }
 
   @Put("Update")
@@ -21,13 +17,13 @@ export class AppController {
     return this.appService.upPost(post.postID, post.userID, post.title, post.content);3
   }
 
-  @Delete("Remove")
-  rmPost(@Body() post): {
-    return ;
+  @Delete("delete")
+  rmPost(@Body() dto: CreatePostDto){
+    return this.appService.rmPost(dto);
   }
 
   @Get("Check")
-  checkPost(@Body() post){
-    return this.appService.checkPost(post.postID);
+  checkPost(@Body() dto: CreatePostDto){
+    return this.appService.checkPost(dto);
   }
 }
