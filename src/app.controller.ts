@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Param, NotFoundException } from '@nestjs/common';
 import { AppService, post } from './app.service';
 import { CreatePostDto } from './dto/create-post.dto'
+import { NotFoundError } from 'rxjs';
 
 @Controller()
 export class AppController {
@@ -22,7 +23,9 @@ export class AppController {
   }
 
   @Get("Check")
-  checkPost(@Body() dto: CreatePostDto){
-    return this.appService.checkPost(dto);
+  checkPost(@Param('postID') postID: number){
+    const post = this.appService.checkPost(postID);
+    if(!post) throw new NotFoundException('Post not found');
+    return post;
   }
 }

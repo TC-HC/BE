@@ -32,8 +32,11 @@ export class AppService {
 
   mkPost(dto: CreatePostDto) {
     const post: post = this.toPost(dto);
+    if(this.posts.find(p => p.postID === post.postID)) return "postID duplicated..";
+    else{
     this.posts.push(post)
     return post;
+    }
   }
 
   upPost(dto: CreatePostDto) {
@@ -51,7 +54,7 @@ export class AppService {
     return "deleted";
   }
 
-  checkPost(dto: CreatePostDto) {
-    return this.posts.find(p => p.postID === dto.postID);
+  checkPost(postID: number) {
+    return this.posts.find(p => p.postID === postID);
   }
 }

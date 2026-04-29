@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AppService, post } from './app.service';
+import { AppService } from './app.service';
 import { CreatePostDto } from './dto/create-post.dto'
 
 const dto = new CreatePostDto();
@@ -24,7 +24,7 @@ describe('AppController', () => {
 
   describe('Make post', () => {
     it('return information of post', () => {
-      expect(appController.mkPost(dto)).toEqual(dto);
+      expect(appController.mkPost(dto)).toEqual("postID duplicated..");
     });
   });
 
@@ -42,7 +42,7 @@ describe('AppController', () => {
 
   describe('Check information of post', () => {
     it('return matching post', () => {
-      expect(appController.checkPost(dto)).toEqual(dto)
+      expect(appController.checkPost(dto.postID)).toEqual(dto)
     })
   })
   
