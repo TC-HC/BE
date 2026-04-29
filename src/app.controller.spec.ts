@@ -2,10 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService, post } from './app.service';
 import { CreatePostDto } from './dto/create-post.dto'
-import { Post } from '@nestjs/common';
 
-const dto = new CreatePostDto;
-dto.postID
+const dto = new CreatePostDto();
+dto.postID = 1;
+dto.userID = 1;
+dto.writer = "Choi";
+dto.title = "첫 글";
+dto.content = "Hello World"
 
 describe('AppController', () => {
   let appController: AppController;
@@ -21,7 +24,7 @@ describe('AppController', () => {
 
   describe('Make post', () => {
     it('return information of post', () => {
-      expect(appController.mkPost(dto)).toBe(dto);
+      expect(appController.mkPost(dto)).toEqual(dto);
     });
   });
 
@@ -39,7 +42,7 @@ describe('AppController', () => {
 
   describe('Check information of post', () => {
     it('return matching post', () => {
-      expect(appController.checkPost(dto)).toBe(dto)
+      expect(appController.checkPost(dto)).toEqual(dto)
     })
   })
   
