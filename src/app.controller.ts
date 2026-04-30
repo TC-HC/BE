@@ -22,7 +22,7 @@ export class AppController {
     return this.appService.rmPost(dto);
   }
 
-  @Get("Check")
+  @Get("Check/:postID")
   checkPost(@Param('postID') postID: number){
     const post = this.appService.checkPost(postID);
     if(!post) throw new NotFoundException('Post not found');
