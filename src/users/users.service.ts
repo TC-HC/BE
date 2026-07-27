@@ -1,27 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { UsersRepository } from './users.repository';
+import { SignupDto } from 'src/auth/dto/signup.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly userRepository: UsersRepository) {}
 
     async findByEmail(email: string) {
-        return this.prisma.user.findUnique({
-            where: { email },
-        });
+        const user = await this.userRepository.findByEmail(email);
+        
+        if(!user) {
+            throw new NotFoundException('존재하지 않는 이메일입니다.');
+        }
+
+        return this.userRepository.findByEmail(email);
     }
 
-    async create(email: string, name: string, passwordPlain: string) {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(passwordPlain, saltRounds);
+    async create(signupDto: SignupDto) {
+        const { email, name, password } = signupDto;
 
-        return this.prisma.user.create({
-            data: {
-                email,
-                name,
-                password: hashedPassword,
-            },
+        const existingUser = await this.userRepository.findByEmail(email);
+
+        if(!existingUser) {
+            throw new ConflictException('이미 사용 중인 이메일입니다.');
+        }
+
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        return this.userRepository.create({
+            email: email,
+            name: name,
+            password: hashedPassword,
         });
     }
 }

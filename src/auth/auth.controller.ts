@@ -1,18 +1,9 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
-import { ApiTags, ApiOperation, ApiProperty } from '@nestjs/swagger';
-
-class SignupDto {
-    @ApiProperty({ example: 'inforteam@gmail.com' }) email!: string;
-    @ApiProperty({ example: '인포팀' }) name!: string;
-    @ApiProperty({ example: 'password123' }) password!: string;
-}
-
-class LoginDto {
-    @ApiProperty({ example: 'infoteam@gmail.com' }) email!: string;
-    @ApiProperty({ example: 'password123' }) password!: string;
-}
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
 @ApiTags('인증 (Auth)')
 @Controller('auth')
@@ -21,8 +12,8 @@ export class AuthController {
 
     @Post('signup')
     @ApiOperation({ summary: '회원가입' })
-    async signup(@Body() body: any) {
-        return this.userService.create(body.email, body.name, body.password);
+    async signup(@Body() body: SignupDto) {
+        return this.userService.create(body);
     }
 
     @Post('login')

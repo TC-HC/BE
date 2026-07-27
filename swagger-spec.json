@@ -19,6 +19,16 @@
       "post": {
         "operationId": "AuthController_signup",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -204,6 +214,28 @@
       }
     },
     "schemas": {
+      "SignupDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "inforteam@gmail.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "인포팀"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
       "LoginDto": {
         "type": "object",
         "properties": {

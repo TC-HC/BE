@@ -12,13 +12,15 @@ generator client {
 }
 
 model User { 
-  id        Int      @id @default(autoincrement()) 
-  email     String   @unique
-  name      String?
-  password  String
-  role      Role     @default(USER) 
-  posts     Post[]
-  profile   Profile?
+  id                    Int      @id @default(autoincrement()) 
+  email                 String   @unique
+  name                  String?
+  password              String
+  role                  Role     @default(USER) 
+  posts                 Post[]
+  profile               Profile?
+  providers             String[]
+  subscribedCategories  Category[]
 } 
 
 model Profile { 
@@ -41,9 +43,10 @@ model Post {
 } 
 
 model Category { 
-  id    Int     @id @default(autoincrement()) 
-  name  String  @unique
-  posts Post[]
+  id          Int     @id @default(autoincrement()) 
+  name        String  @unique
+  posts       Post[]
+  subscribers User[]
 } 
 
 enum Role { 
