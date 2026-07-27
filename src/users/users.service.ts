@@ -23,7 +23,7 @@ export class UsersService {
 
         const existingUser = await this.userRepository.findByEmail(email);
 
-        if(!existingUser) {
+        if(existingUser) {
             throw new ConflictException('이미 사용 중인 이메일입니다.');
         }
 
