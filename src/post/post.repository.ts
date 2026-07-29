@@ -20,7 +20,7 @@ export class PostRepository {
           },
           categories: {
             connect: categoryIds?.map ((id) => ({ id })) || [],
-            connectOrCreate: newCategoryNames?.map((name) => ({
+            connectOrCreate: newCategoryNames?.map((name) => ({ // name으로 찾아서 연결하되, 없을 경우 create하다
               where: { name: name },
               create: { name: name },
             })) || [], // 논리합 연산자, 좌항이 falsy한 값이면 우항의 빈 배열을

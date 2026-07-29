@@ -15,7 +15,7 @@ export class UsersService {
             throw new NotFoundException('존재하지 않는 이메일입니다.');
         }
 
-        return this.userRepository.findByEmail(email);
+        return user;
     }
 
     async create(signupDto: SignupDto) {
