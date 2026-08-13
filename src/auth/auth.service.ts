@@ -35,7 +35,8 @@ export class AuthService {
             const user = await this.authRepository.upsertOauthUser(
                 reqUser.email,
                 reqUser.name!,
-                reqUser.provider
+                reqUser.provider,
+                reqUser.providerId
             );
 
             return user;
@@ -45,7 +46,7 @@ export class AuthService {
     }
 
     async login(user: SafeUser) {
-        const payload = { email: user.email, sub: user.uuid };
+        const payload = { email: user.email, sub: user.uuid, name: user.name };
         return { access_token: this.jwtService.sign(payload)};
     }
 }

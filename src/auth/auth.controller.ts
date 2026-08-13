@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, HttpCode } from '@nestjs/common';
 import type { Request } from 'express'
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { SignupDto } from './dto/signup.dto';
-import { GoogleUserDto } from './dto/google_user.dto';
+import { LoginDto } from './dto/login.dto';
 import type { SafeUser } from './auth.service';
+import { HttpStatus } from '@nestjs/common';
 
 @ApiTags('인증 (Auth)')
 @Controller('auth')
@@ -18,6 +19,7 @@ export class AuthController {
 
     @Post('signup')
     @ApiOperation({ summary: '회원가입' })
+    @ApiBody({ type: SignupDto })
     async signup(@Body() body: SignupDto) {
         return this.userService.create(body);
     }
@@ -25,22 +27,22 @@ export class AuthController {
     @UseGuards(AuthGuard('local'))
     @Post('login')
     @ApiOperation(({ summary: '로그인 및 JWT 토큰 발급' }))
-    async login(@Body() body: SafeUser) {
-        return this.authService.login(body);
+    @ApiBody({ type: LoginDto })
+    async login(@Req() req: Request) {
+        const user = (req as any).user as SafeUser;
+        return this.authService.login(user);
     }
 
-    @UseGuards(AuthGuard('google'))
-    @Get('google')
-    @ApiOperation({ summary: '구글 소셜 로그인 시작' })
-    async googleAuth() {}
-
-    @UseGuards(AuthGuard('google'))
-    @Get('google/callback')
-    @ApiOperation({ summary: '구글 소셜 로그인 콜백 및 토큰 발급' })
-    async googleAuthRedirect(@Req() req: Request) {
-        const oauthUser = req.user as GoogleUserDto;
-        const safeUser = await this.authService.googleValidate(oauthUser);
-
-        return this.authService.login(safeUser);
+    @UseGuards(AuthGuard('jwt'))
+    @Post('logout')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: '로그아웃' })
+    @ApiBearerAuth()
+    async logout(@Req() req: Request) {
+        return {
+            statusCode: 200,
+            message: '성공적으로 로그아웃되었습니다. client에서 토큰을 삭제해주세요.'
+        };
     }
+
 }

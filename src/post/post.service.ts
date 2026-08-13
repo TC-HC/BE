@@ -8,7 +8,7 @@ import { PostRepository } from './post.repository';
 export class PostService {
   constructor(private readonly postRepository: PostRepository, private readonly prisma: PrismaService) {}
 
-  async create(createPostDto: CreatePostDto, authorId: number) {
+  async create(createPostDto: CreatePostDto, authorId: string) {
     // UnauthorizedException
 
     return this.postRepository.create(createPostDto, authorId);
@@ -22,7 +22,7 @@ export class PostService {
         const post = await this.prisma.post.findUnique({
         where: { id: id },
         include: {
-            author: {select: { id: true, name: true, email: true }},
+            author: {select: { uuid: true, name: true, email: true }},
             categories: true,
         },
     });
@@ -34,7 +34,7 @@ export class PostService {
     return post;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto, authorId) {
+  async update(id: number, updatePostDto: UpdatePostDto, authorId: string) {
     const post = await this.findOne(id);
 
     if(post.authorId !== authorId){
@@ -44,7 +44,7 @@ export class PostService {
     return this.postRepository.update(id, updatePostDto);
   }
 
-  async remove(id: number, authorId: number) {  // id: post의 고유한 id, authorId: 삭제를 요청한 user의 고유한 id
+  async remove(id: number, authorId: string) {  // id: post의 고유한 id, authorId: 삭제를 요청한 user의 고유한 uuid
     const post = await this.findOne(id);
 
     if(!post) {

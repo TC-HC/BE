@@ -11,4 +11,7 @@ export class GoogleUserDto {
 
     @IsString()
     provider!: string;
+
+    @IsString()
+    providerId!: string;
 }

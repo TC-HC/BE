@@ -30,6 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
             email: email,
             name: profile.name?.givenName || 'Unknown',
             provider: 'google',
+            providerId: profile.id
         }
 
         return this.authService.googleValidate(reqUser);

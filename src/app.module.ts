@@ -8,7 +8,7 @@ import { PostModule } from './post/post.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, AuthModule, PrismaModule, PostModule, ConfigModule.forRoot({ isGlobal: true })],
+  imports: [UsersModule, AuthModule, PrismaModule, PostModule, ConfigModule.forRoot({ isGlobal: true }), AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -9,8 +9,8 @@ export class LocalStrategy extends PassportStrategy(Strategy){
         super({ usernameField: 'email', passwordField: 'password' });
     }
 
-    async validate(email: string, pass: string): Promise<any> {
-        const user = await this.authService.validateUser(email, pass);
+    async validate(email: string, password: string): Promise<any> {
+        const user = await this.authService.validateUser({email, password});
         
         if(!user) {
             throw new UnauthorizedException('이메일 또는 비밀번호가 존재하지 않습니다.');

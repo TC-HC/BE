@@ -8,7 +8,7 @@ import { UpdatePostDto } from "./dto/update-post.dto";
 export class PostRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-  async create(createPostDto: CreatePostDto, authorId: number) {
+  async create(createPostDto: CreatePostDto, authorId: string) {
     const { title, content, published, categoryIds, newCategoryNames } = createPostDto;
     return this.prisma.post.create({
         data: {
@@ -16,7 +16,7 @@ export class PostRepository {
           content: content,
           published: published ?? false, // null 병합 연산자
           author: {
-            connect: { id: authorId },
+            connect: { uuid: authorId },
           },
           categories: {
             connect: categoryIds?.map ((id) => ({ id })) || [],
@@ -32,7 +32,7 @@ export class PostRepository {
   async findAll() {
     return this.prisma.post.findMany({
       include: {
-        author: { select: { id: true, name: true, email: true }},
+        author: { select: { uuid: true, name: true, email: true }},
         categories: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -43,7 +43,7 @@ export class PostRepository {
     const post = await this.prisma.post.findUnique({
         where: { id: id },
         include: {
-            author: {select: { id: true, name: true, email: true }},
+            author: {select: { uuid: true, name: true, email: true }},
             categories: true,
         },
     });
