@@ -21,4 +21,26 @@ export class UsersRepository {
             where: { uuid },
         });
     }
+
+    async subscribeCategory(uuid: string, categoryName: string) {
+        return await this.prisma.user.update({
+            where: { uuid: uuid },
+            data: {
+                subscribedCategories: {
+                    connect: { name: categoryName }
+                }
+            }
+        });
+    }
+
+        async unsubscribeCategory(uuid: string, categoryName: string) {
+        return await this.prisma.user.update({
+            where: { uuid: uuid },
+            data: {
+                subscribedCategories: {
+                    disconnect: { name: categoryName }
+                }
+            }
+        });
+    }
 }

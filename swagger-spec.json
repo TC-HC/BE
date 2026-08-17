@@ -65,9 +65,29 @@
         ]
       }
     },
-    "/auth/google": {
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "로그아웃",
+        "tags": [
+          "인증 (Auth)"
+        ]
+      }
+    },
+    "/oauth/google": {
       "get": {
-        "operationId": "AuthController_googleAuth",
+        "operationId": "OAuthController_googleAuth",
         "parameters": [],
         "responses": {
           "200": {
@@ -76,13 +96,13 @@
         },
         "summary": "구글 소셜 로그인 시작",
         "tags": [
-          "인증 (Auth)"
+          "소셜 인증 (Oauth)"
         ]
       }
     },
-    "/auth/google/callback": {
+    "/oauth/google/callback": {
       "get": {
-        "operationId": "AuthController_googleAuthRedirect",
+        "operationId": "OAuthController_googleAuthRedirect",
         "parameters": [],
         "responses": {
           "200": {
@@ -91,7 +111,22 @@
         },
         "summary": "구글 소셜 로그인 콜백 및 토큰 발급",
         "tags": [
-          "인증 (Auth)"
+          "소셜 인증 (Oauth)"
+        ]
+      }
+    },
+    "/oauth/userInfo": {
+      "get": {
+        "operationId": "OAuthController_getUserInfo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "정보 조회",
+        "tags": [
+          "소셜 인증 (Oauth)"
         ]
       }
     },
@@ -225,6 +260,102 @@
           "게시글 (Post)"
         ]
       }
+    },
+    "/category": {
+      "post": {
+        "operationId": "CategoryController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Category 생성",
+        "tags": [
+          "카테고리 (Category)"
+        ]
+      },
+      "get": {
+        "operationId": "CategoryController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "전체 Category 조회",
+        "tags": [
+          "카테고리 (Category)"
+        ]
+      }
+    },
+    "/category/{name}": {
+      "get": {
+        "operationId": "CategoryController_findOne",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "특정 Category 조회",
+        "tags": [
+          "카테고리 (Category)"
+        ]
+      }
+    },
+    "/category/{id}": {
+      "delete": {
+        "operationId": "CategoryController_remove",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Category 삭제",
+        "tags": [
+          "카테고리 (Category)"
+        ]
+      }
     }
   },
   "info": {
@@ -332,6 +463,19 @@
       "UpdatePostDto": {
         "type": "object",
         "properties": {}
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "카테고리의 이름",
+            "example": "GIST"
+          }
+        },
+        "required": [
+          "name"
+        ]
       }
     }
   }

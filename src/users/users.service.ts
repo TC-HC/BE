@@ -36,4 +36,12 @@ export class UsersService {
             password: hashedPassword,
         });
     }
+
+    async subscribeCategory(uuid: string, categoryName: string) {
+        return this.userRepository.subscribeCategory(uuid, categoryName);
+    }
+
+    async unsubscribeCategory(uuid: string, categoryName: string) {
+        return this.userRepository.unsubscribeCategory(uuid, categoryName);
+    }
 }

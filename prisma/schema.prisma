@@ -20,6 +20,7 @@ model User {
   posts                 Post[]
   profile               Profile?
   providers             String[]
+  providerId            String?  @unique
   subscribedCategories  Category[]
 } 
 
