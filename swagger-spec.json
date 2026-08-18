@@ -15,6 +15,64 @@
         ]
       }
     },
+    "/user/me/categories/{categoryName}/subscribe": {
+      "post": {
+        "operationId": "UsersController_subscribeCategory",
+        "parameters": [
+          {
+            "name": "categoryName",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Category 구독",
+        "tags": [
+          "유저 (User)"
+        ]
+      }
+    },
+    "/user/me/categories/{categoryName}/unsubscribe": {
+      "post": {
+        "operationId": "UsersController_unsubscribeCategory",
+        "parameters": [
+          {
+            "name": "categoryName",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Category 구독 취소",
+        "tags": [
+          "유저 (User)"
+        ]
+      }
+    },
     "/auth/signup": {
       "post": {
         "operationId": "AuthController_signup",

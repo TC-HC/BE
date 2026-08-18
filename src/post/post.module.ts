@@ -10,8 +10,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [PostController],
   providers: [
     PostService,
-    PostRepository,
-    PrismaService
+    PostRepository
   ],
 })
 export class PostModule {}

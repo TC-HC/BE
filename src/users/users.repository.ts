@@ -29,6 +29,13 @@ export class UsersRepository {
                 subscribedCategories: {
                     connect: { name: categoryName }
                 }
+            },
+            select: {
+                uuid: true,
+                email: true,
+                name: true,
+                role: true,
+                subscribedCategories: true
             }
         });
     }
@@ -40,6 +47,13 @@ export class UsersRepository {
                 subscribedCategories: {
                     disconnect: { name: categoryName }
                 }
+            },
+            select: {
+                uuid: true,
+                email: true,
+                name: true,
+                role: true,
+                subscribedCategories: true
             }
         });
     }
