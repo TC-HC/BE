@@ -3,10 +3,11 @@ import { PostService } from './post.service';
 import { PostController } from './post.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PostRepository } from './post.repository';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersModule } from 'src/users/users.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, UsersModule, NotificationModule],
   controllers: [PostController],
   providers: [
     PostService,

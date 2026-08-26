@@ -38,6 +38,10 @@ export class UsersService {
         });
     }
 
+    async getSubscribers(categoryNames: string[]) {
+        return await this.userRepository.findByCategoryId(categoryNames);
+    }
+
     async subscribeCategory(uuid: string, categoryName: string) {
         try {
             return this.userRepository.subscribeCategory(uuid, categoryName);

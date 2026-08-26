@@ -27,5 +27,5 @@ export class CreatePostDto {
     @IsArray()
     @IsString({ each: true })
     @IsOptional()
-    newCategoryNames?: string[];
+    CategoryNames?: string[];
 }

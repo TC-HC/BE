@@ -22,6 +22,14 @@ export class UsersRepository {
         });
     }
 
+    async findByCategoryId(categoryNames: string[]) {
+        return this.prisma.user.findMany({
+            where: {
+                subscribedCategories: { some: { name: { in: categoryNames } }}
+            }
+        })
+    }
+
     async subscribeCategory(uuid: string, categoryName: string) {
         return await this.prisma.user.update({
             where: { uuid: uuid },

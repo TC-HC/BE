@@ -8,7 +8,7 @@ export class PostRepository {
     constructor(private readonly prisma: PrismaService) {}
 
   async create(createPostDto: CreatePostDto, authorId: string) {
-    const { title, content, published, categoryIds, newCategoryNames } = createPostDto;
+    const { title, content, published, categoryIds, CategoryNames } = createPostDto;
     return this.prisma.post.create({
         data: {
           title: title,
@@ -19,7 +19,7 @@ export class PostRepository {
           },
           categories: {
             connect: categoryIds?.map ((id) => ({ id })) || [],
-            connectOrCreate: newCategoryNames?.map((name) => ({ // name으로 찾아서 연결하되, 없을 경우 create하다
+            connectOrCreate: CategoryNames?.map((name) => ({ // name으로 찾아서 연결하되, 없을 경우 create하다
               where: { name: name },
               create: { name: name },
             })) || [], // 논리합 연산자, 좌항이 falsy한 값이면 우항의 빈 배열을
