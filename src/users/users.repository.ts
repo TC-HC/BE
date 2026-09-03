@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
 
@@ -31,21 +31,30 @@ export class UsersRepository {
     }
 
     async subscribeCategory(uuid: string, categoryName: string) {
-        return await this.prisma.user.update({
-            where: { uuid: uuid },
-            data: {
-                subscribedCategories: {
-                    connect: { name: categoryName }
+        try {
+                return await this.prisma.user.update({
+                where: { uuid: uuid },
+                data: {
+                    subscribedCategories: {
+                        connect: { name: categoryName }
+                    }
+                },
+                select: {
+                    uuid: true,
+                    email: true,
+                    name: true,
+                    role: true,
+                    subscribedCategories: true
                 }
-            },
-            select: {
-                uuid: true,
-                email: true,
-                name: true,
-                role: true,
-                subscribedCategories: true
+            });
+        } catch (error) {
+            if(error instanceof Prisma.PrismaClientKnownRequestError){
+                if(error.code === 'P2025') {
+                    throw new NotFoundException(`${categoryName}을 찾을 수 없습니다.`);
+                
+                }
             }
-        });
+        }
     }
 
         async unsubscribeCategory(uuid: string, categoryName: string) {

@@ -17,13 +17,13 @@ export class CreatePostDto {
     @IsOptional()
     published?: boolean;
 
-    @ApiPropertyOptional({ description: '게시물 카테고리의 고유 ID 배열', example: [1, 2], type: [Number] })
+    @ApiPropertyOptional({ description: '게시물 카테고리의 고유 ID 배열', example: [1], type: [Number] })
     @IsArray()
     @IsInt({ each: true })
     @IsOptional()
     categoryIds?: number[];
 
-    @ApiPropertyOptional({ description: '새롭게 추가하는 카테고리의 이름 배열', example: ['나의순결한마음을', '짓밟다니'], type: [String] })
+    @ApiPropertyOptional({ description: '새롭게 추가하는 카테고리의 이름 배열', example: ['sans'], type: [String] })
     @IsArray()
     @IsString({ each: true })
     @IsOptional()

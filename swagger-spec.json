@@ -188,6 +188,47 @@
         ]
       }
     },
+    "/post/me": {
+      "get": {
+        "operationId": "PostController_getUserPostStats",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "페이지당 항목 수",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "유저 게시글 조회",
+        "tags": [
+          "게시글 (Post)"
+        ]
+      }
+    },
     "/post": {
       "post": {
         "operationId": "PostController_create",
@@ -319,6 +360,41 @@
         ]
       }
     },
+    "/category/stats": {
+      "get": {
+        "operationId": "CategoryController_getCategoryStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Category 상태 확인 ",
+        "tags": [
+          "카테고리 (Category)"
+        ]
+      }
+    },
+    "/category/me/subscriptions": {
+      "get": {
+        "operationId": "CategoryController_getMySubscriptionStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "사용자(본인)의 카테고리 구독 현황 확인 및 게시글 작성 현황",
+        "tags": [
+          "카테고리 (Category)"
+        ]
+      }
+    },
     "/category": {
       "post": {
         "operationId": "CategoryController_create",
@@ -384,9 +460,7 @@
         "tags": [
           "카테고리 (Category)"
         ]
-      }
-    },
-    "/category/{id}": {
+      },
       "delete": {
         "operationId": "CategoryController_remove",
         "parameters": [
@@ -493,8 +567,7 @@
           "categoryIds": {
             "description": "게시물 카테고리의 고유 ID 배열",
             "example": [
-              1,
-              2
+              1
             ],
             "type": "array",
             "items": {
@@ -504,8 +577,7 @@
           "CategoryNames": {
             "description": "새롭게 추가하는 카테고리의 이름 배열",
             "example": [
-              "나의순결한마음을",
-              "짓밟다니"
+              "sans"
             ],
             "type": "array",
             "items": {

@@ -12,6 +12,36 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: always
+    networks:
+      - push-net
+  
+  push-server:
+    image: yeonhyukkim/fake-push-server:latest
+    container_name: fake-push-server
+    ports:
+      - "8090:8090"
+    networks:
+      - push-net
+
+  board-server:
+    build: .
+    container_name: board-server
+    ports:
+      - "3001:3000"
+    environment:
+      - PUSH_SERVER_URL=http://fake-push-server:8090/api/push
+      - DATABASE_URL=postgresql://infoteam:infoteam123@dev-db:5432/nest_db
+    env_file:
+      - .env
+    depends_on:
+      - push-server
+      - dev-db
+    networks:
+      - push-net
 
 volumes:
   pgdata:
+
+networks:
+  push-net:
+    driver: bridge

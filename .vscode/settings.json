@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "username": "infoteam",
+            "password": "infoteam123",
+            "name": "NEST DB",
+            "database": "nest_db"
+        }
+    ]
+}

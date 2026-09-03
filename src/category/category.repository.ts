@@ -39,4 +39,36 @@ export class CategoryRepository {
     async Remove(name: string) {
         return await this.prisma.category.delete({ where: { name: name }});
     }
+
+    async getCategoryStats() {
+        return this.prisma.category.findMany({
+            select: {
+                id: true,
+                name: true,
+                _count: {
+                    select: {
+                        posts: true,
+                        subscribers: true,
+                    }
+                }
+            },
+            orderBy: { id: 'asc' }
+        });
+    }
+
+    async getMySubscriptionStats(userId: string) {
+        return this.prisma.category.findMany({
+            select: {
+                id: true,
+                name: true,
+                _count: {
+                    select: {
+                        posts: { where: { authorId: userId }},
+                        subscribers: { where: { uuid: userId }}
+                    }
+                }
+            },
+            orderBy: { id: 'asc' }
+        });
+    }
 }

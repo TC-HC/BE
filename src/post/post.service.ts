@@ -23,7 +23,7 @@ export class PostService {
 
     if(targetUserIds.length > 0) {
       this.notificationService.sendPushNotification(
-        subscribers.map(user => user.uuid),
+        targetUserIds,
         post.title
       );
     }
@@ -46,7 +46,7 @@ export class PostService {
     });
 
     if(!post){
-      throw new NotFoundException('${id}번 게시글을 찾을 수 없습니다.');
+      throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
 
     return post;
@@ -74,5 +74,16 @@ export class PostService {
     }
 
     return this.postRepository.delete(id);
+  }
+
+  async getUserPostStats(userId: string, page: number, limit: number) {
+    const posts = await this.postRepository.getUserPostStats(userId, page, limit);
+    return {
+      data: posts,
+      pagination: {
+        page,
+        limit,
+      }
+    };
   }
 }

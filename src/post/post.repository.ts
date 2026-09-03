@@ -70,4 +70,23 @@ export class PostRepository {
             where: { id: id },
         });
     }
+
+    async getUserPostStats(authorId: string, page: number, limit: number) {
+      const skip = (page - 1) * limit;
+      const posts = 
+      this.prisma.post.findMany({
+          where: { authorId },
+          select: {
+            id: true,
+            title: true,
+            createdAt: true,
+            published: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          skip,
+          take: limit,
+        });
+
+      return posts;
+    }
 }

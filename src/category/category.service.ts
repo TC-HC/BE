@@ -1,6 +1,4 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryRepository } from './category.repository';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -27,7 +25,7 @@ export class CategoryService {
   }
 
   async findOne(name: string) {
-    const existCategory = this.categoryRepository.findOne(name);
+    const existCategory = await this.categoryRepository.findOne(name);
 
     if(!existCategory) {
       throw new NotFoundException(`${name} 카테고리를 찾을 수 없습니다.`);
@@ -37,12 +35,33 @@ export class CategoryService {
   }
 
   async remove(name: string) {
-    const existCategory = this.categoryRepository.findOne(name);
+    const existCategory = await this.categoryRepository.findOne(name);
 
     if(!existCategory) {
       throw new NotFoundException(`${name} 카테고리를 찾을 수 없습니다.`);
     }
 
-    return existCategory;
+    return this.categoryRepository.Remove(name);
+  }
+
+  async getCategoryStats() {
+    const categories = await this.categoryRepository.getCategoryStats();
+
+    return categories.map((c) => ({
+      id: c.id,
+      name: c.name,
+      postCount: c._count.posts,
+      subscriberCount: c._count.subscribers
+    }));
+  }
+
+  async getMySubscriptionStats(userId: string) {
+    const categories = this.categoryRepository.getMySubscriptionStats(userId);
+    return (await categories).map((c) => ({
+      id: c.id,
+      name: c.name,
+      isSubscribed: c._count.subscribers > 0,
+      myPostCount: c._count.posts,
+    }));
   }
 }
