@@ -18,8 +18,8 @@ services:
   push-server:
     image: yeonhyukkim/fake-push-server:latest
     container_name: fake-push-server
-    ports:
-      - "8090:8090"
+    # ports:
+    #   - "8090:8090"
     networks:
       - push-net
 

@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
+import { AllExceptionFilter } from 'common/filters/all-exceptions.filter';
+import { LoggingInterceptor } from 'common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +14,8 @@ async function bootstrap() {
     transform: true,  // 클라이언트가 보낸 데이터를 DTO 클래스 타입으로 변환
   }),
 );
+  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalFilters(new  AllExceptionFilter());
 
   const config = new DocumentBuilder()
   .setTitle('API 명세서')
