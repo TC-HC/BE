@@ -1,89 +1,115 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PostRepository } from './post.repository';
+import { PostRepository, UserPostStat } from './post.repository';
 import { NotificationService } from 'src/notification/notification.service';
-import { UsersService } from 'src/users/users.service';
+import { Post, User } from '@prisma/client';
+
+export interface PostStatsResponse {
+  data: UserPostStat[];
+  pagination: {
+    page: number;
+    limit: number;
+  };
+}
 
 @Injectable()
 export class PostService {
   constructor(
     private readonly postRepository: PostRepository,
-    private readonly prisma: PrismaService,
     private readonly notificationService: NotificationService,
-    private readonly usersService: UsersService
   ) {}
 
-  async create(createPostDto: CreatePostDto, authorId: string) {
+  async create(createPostDto: CreatePostDto, authorId: string): Promise<Post> {
     const post = await this.postRepository.create(createPostDto, authorId);
 
-    const subscribers = await this.usersService.getSubscribers(createPostDto.CategoryNames!)
-    const targetUserIds = subscribers.map(user => user.uuid).filter(uuid => uuid !== authorId);
+    const subscribers = await this.getSubscribers(createPostDto.CategoryNames!);
+    const targetUserIds = subscribers
+      .map((user) => user.uuid)
+      .filter((uuid) => uuid !== authorId);
 
-    if(targetUserIds.length > 0) {
-      this.notificationService.sendPushNotification(
+    if (targetUserIds.length > 0) {
+      await this.notificationService.sendPushNotification(
         targetUserIds,
-        post.title
+        post.title,
       );
     }
 
-    
-    return post
+    return post;
   }
 
-  async findAll() {
-    return this.postRepository.findAll();
+  async findAll(): Promise<Post[]> {
+    return await this.postRepository.findAll();
   }
 
-  async findOne(id: number) {
-        const post = await this.prisma.post.findUnique({
-        where: { id: id },
-        include: {
-            author: {select: { uuid: true, name: true, email: true }},
-            categories: true,
-        },
-    });
+  async findOne(id: number): Promise<Post | null> {
+    const post = await this.postRepository.findOne(id);
 
-    if(!post){
+    if (!post) {
       throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
     }
 
     return post;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto, authorId: string) {
+  async update(
+    id: number,
+    updatePostDto: UpdatePostDto,
+    authorId: string,
+  ): Promise<Post> {
     const post = await this.findOne(id);
 
-    if(post.authorId !== authorId){
+    if (!post) {
+      throw new NotFoundException(`${id}번 게시글을 찾을 수 없습니다.`);
+    }
+
+    if (post.authorId !== authorId) {
       throw new ForbiddenException('본인의 게시글만 수정할 수 있습니다.');
     }
 
-    return this.postRepository.update(id, updatePostDto);
+    return await this.postRepository.update(id, updatePostDto);
   }
 
-  async remove(id: number, authorId: string) {  // id: post의 고유한 id, authorId: 삭제를 요청한 user의 고유한 uuid
+  async remove(id: number, authorId: string): Promise<Post> {
     const post = await this.findOne(id);
 
-    if(!post) {
-      throw new NotFoundException('이미 삭제되었거나 존재하지 않는 게시글입니다.');
+    if (!post) {
+      throw new NotFoundException(
+        '이미 삭제되었거나 존재하지 않는 게시글입니다.',
+      );
     }
 
-    if(post.authorId !== authorId) {
+    if (post.authorId !== authorId) {
       throw new ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
     }
 
-    return this.postRepository.delete(id);
+    return await this.postRepository.delete(id);
   }
 
-  async getUserPostStats(userId: string, page: number, limit: number) {
-    const posts = await this.postRepository.getUserPostStats(userId, page, limit);
+  async getSubscribers(categoryNames: string[]): Promise<User[]> {
+    return await this.postRepository.findByCategoryId(categoryNames);
+  }
+
+  async getUserPostStats(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<PostStatsResponse> {
+    const posts = await this.postRepository.getUserPostStats(
+      userId,
+      page,
+      limit,
+    );
     return {
       data: posts,
       pagination: {
         page,
         limit,
-      }
+      },
     };
   }
 }
