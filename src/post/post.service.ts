@@ -6,7 +6,7 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRepository, UserPostStat } from './post.repository';
-import { NotificationService } from 'src/notification/notification.service';
+import { NotificationService } from '@app/notification';
 import { Post, User } from '@prisma/client';
 
 export interface PostStatsResponse {

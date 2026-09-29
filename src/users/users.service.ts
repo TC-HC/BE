@@ -4,16 +4,16 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
+import { SubscribeCategoryResponse, UsersRepository } from './users.repository';
 import { SignupDto } from 'src/auth/dto/signup.dto';
-import { Prisma } from '@prisma/client';
+import { Category, Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
@@ -23,7 +23,7 @@ export class UsersService {
     return user;
   }
 
-  async create(signupDto: SignupDto) {
+  async create(signupDto: SignupDto): Promise<User> {
     const { email, name, password } = signupDto;
 
     const existingUser = await this.userRepository.findByEmail(email);
@@ -42,9 +42,12 @@ export class UsersService {
     });
   }
 
-  async subscribeCategory(uuid: string, categoryName: string) {
+  async subscribeCategory(
+    uuid: string,
+    categoryName: string,
+  ): Promise<SubscribeCategoryResponse> {
     try {
-      return this.userRepository.subscribeCategory(uuid, categoryName);
+      return await this.userRepository.subscribeCategory(uuid, categoryName);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
@@ -59,7 +62,10 @@ export class UsersService {
     );
   }
 
-  async unsubscribeCategory(uuid: string, categoryName: string) {
+  async unsubscribeCategory(
+    uuid: string,
+    categoryName: string,
+  ): Promise<SubscribeCategoryResponse> {
     try {
       return this.userRepository.unsubscribeCategory(uuid, categoryName);
     } catch (error) {

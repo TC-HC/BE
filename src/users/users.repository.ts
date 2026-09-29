@@ -1,6 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, User } from '@prisma/client';
+import { Category, Prisma, User } from '@prisma/client';
+
+export interface SubscribeCategoryResponse {
+  uuid: string;
+  email: string;
+  name: string | null;
+  role: string;
+  subscribedCategories: Category[];
+}
 
 @Injectable()
 export class UsersRepository {
@@ -22,7 +30,10 @@ export class UsersRepository {
     });
   }
 
-  async subscribeCategory(uuid: string, categoryName: string) {
+  async subscribeCategory(
+    uuid: string,
+    categoryName: string,
+  ): Promise<SubscribeCategoryResponse> {
     try {
       return await this.prisma.user.update({
         where: { uuid: uuid },
@@ -45,10 +56,15 @@ export class UsersRepository {
           throw new NotFoundException(`${categoryName}을 찾을 수 없습니다.`);
         }
       }
+
+      throw error;
     }
   }
 
-  async unsubscribeCategory(uuid: string, categoryName: string) {
+  async unsubscribeCategory(
+    uuid: string,
+    categoryName: string,
+  ): Promise<SubscribeCategoryResponse> {
     return await this.prisma.user.update({
       where: { uuid: uuid },
       data: {

@@ -38,7 +38,7 @@ export class PostController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth() // 토큰 인증이 필요한 API 엔드포인트를 자물쇠 아이콘으로 표시, 인증 테스트 지원
+  @ApiBearerAuth()
   @ApiOperation({ summary: '게시글 작성' })
   create(
     @Body() createPostDto: CreatePostDto,
