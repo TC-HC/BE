@@ -7,10 +7,19 @@ import { PrismaModule } from './prisma/prisma.module';
 import { PostModule } from './post/post.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoryModule } from './category/category.module';
-import { NotificationModule } from './notification/notification.module';
+import { NotificationModule } from '@app/notification/notification.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, PrismaModule, PostModule, ConfigModule.forRoot({ isGlobal: true }), AuthModule, CategoryModule, NotificationModule],
+  imports: [
+    UsersModule,
+    AuthModule,
+    PrismaModule,
+    PostModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
+    CategoryModule,
+    NotificationModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

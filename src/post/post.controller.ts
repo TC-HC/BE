@@ -11,13 +11,15 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { PostService, PostStatsResponse } from './post.service';
+import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { Post as PostType } from '@prisma/client';
+import type { Post as PostType, User } from '@prisma/client';
+import { PostStatsResponse } from './types/PostStatsResponse.type';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
 
 @ApiTags('게시글 (Post)')
 @Controller('post')
@@ -29,10 +31,10 @@ export class PostController {
   @Get('me')
   @ApiOperation({ summary: '유저 게시글 조회' })
   getUserPostStats(
-    @Req() req,
+    @GetUser() user: User,
     @Query() query: PaginationDto,
   ): Promise<PostStatsResponse> {
-    const userId = req.user.uuid;
+    const userId = user.uuid;
     return this.postService.getUserPostStats(userId, query.page, query.limit);
   }
 
@@ -42,9 +44,9 @@ export class PostController {
   @ApiOperation({ summary: '게시글 작성' })
   create(
     @Body() createPostDto: CreatePostDto,
-    @Req() req: any,
+    @GetUser() user: User,
   ): Promise<PostType> {
-    return this.postService.create(createPostDto, req.user.userId);
+    return this.postService.create(createPostDto, user.uuid);
   }
 
   @Get()
@@ -66,9 +68,9 @@ export class PostController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePostDto: UpdatePostDto,
-    @Req() req: any,
+    @GetUser() user: User,
   ): Promise<PostType> {
-    return this.postService.update(id, updatePostDto, req.user.userId);
+    return this.postService.update(id, updatePostDto, user.uuid);
   }
 
   @Delete(':id')
@@ -77,8 +79,8 @@ export class PostController {
   @ApiOperation({ summary: '게시글 삭제' })
   remove(
     @Param('id', ParseIntPipe) id: number,
-    @Req() req: any,
+    @GetUser() user: User,
   ): Promise<PostType> {
-    return this.postService.remove(id, req.user.userId);
+    return this.postService.remove(id, user.uuid);
   }
 }

@@ -3,16 +3,22 @@ import { HttpService } from '@nestjs/axios';
 import { from, of } from 'rxjs';
 import { catchError, map, mergeMap, retry, toArray } from 'rxjs/operators';
 import * as crypto from 'crypto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NotificationService {
   private readonly logger = new Logger(NotificationService.name);
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
 
   sendPushNotification(UserIds: string[], postTitle: string): void {
-    const pushServerUrl =
-      process.env.PUSH_SERVER_URL || 'http://localhost:8090/api/push';
+    const pushServerUrl = this.configService.get<string>(
+      'PUSH_SERVER_URL',
+      'http://localhost:8090/api/push',
+    );
     const message = `새로운 게시글이 등록되었습니다: ${postTitle}`;
 
     const notificationStream$ = from(UserIds).pipe(

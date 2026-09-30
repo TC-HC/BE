@@ -5,17 +5,10 @@ import {
 } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostRepository, UserPostStat } from './post.repository';
+import { PostRepository } from './post.repository';
 import { NotificationService } from '@app/notification';
 import { Post, User } from '@prisma/client';
-
-export interface PostStatsResponse {
-  data: UserPostStat[];
-  pagination: {
-    page: number;
-    limit: number;
-  };
-}
+import { PostStatsResponse } from './types/PostStatsResponse.type';
 
 @Injectable()
 export class PostService {

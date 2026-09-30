@@ -4,10 +4,11 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { SubscribeCategoryResponse, UsersRepository } from './users.repository';
+import { UsersRepository } from './users.repository';
 import { SignupDto } from 'src/auth/dto/signup.dto';
 import { Category, Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { SubscribeCategoryResponse } from './types/SubscribeCategory.type';
 
 @Injectable()
 export class UsersService {

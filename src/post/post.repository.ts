@@ -3,13 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from '@prisma/client';
-
-export interface UserPostStat {
-  id: number;
-  title: string;
-  createdAt: Date;
-  published: Boolean;
-}
+import { UserPostStat } from './types/UserPostStat.type';
 
 @Injectable()
 export class PostRepository {

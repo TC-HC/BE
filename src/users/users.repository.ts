@@ -1,14 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Category, Prisma, User } from '@prisma/client';
-
-export interface SubscribeCategoryResponse {
-  uuid: string;
-  email: string;
-  name: string | null;
-  role: string;
-  subscribedCategories: Category[];
-}
+import { SubscribeCategoryResponse } from './types/SubscribeCategory.type';
 
 @Injectable()
 export class UsersRepository {

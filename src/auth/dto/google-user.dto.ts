@@ -1,17 +1,22 @@
-import { Injectable } from "@nestjs/common";
-import { IsEmail, IsString } from "class-validator";
+import { Injectable } from '@nestjs/common';
+import { Type } from 'class-transformer';
+import { IsEmail, IsString } from 'class-validator';
 
 @Injectable()
 export class GoogleUserDto {
-    @IsEmail()
-    email!: string;
+  @IsEmail()
+  @Type(() => String)
+  email!: string;
 
-    @IsString()
-    name!: string;
+  @IsString()
+  @Type(() => String)
+  name!: string;
 
-    @IsString()
-    provider!: string;
+  @IsString()
+  @Type(() => String)
+  provider!: string;
 
-    @IsString()
-    providerId!: string;
+  @IsString()
+  @Type(() => String)
+  providerId!: string;
 }

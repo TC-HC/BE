@@ -5,13 +5,12 @@ import {
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 import { AuthRepository } from './auth.repository';
 import { User } from '@prisma/client';
 import { GoogleUserDto } from './dto/google-user.dto';
-import { LoginDto } from './dto/login.dto';
-
-export type SafeUser = Omit<User, 'password'>; // Omit(a, 'b') : a에서 b를 뺀 객체
+import { loginResultType } from './types/login-result.type';
+// import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,18 +20,18 @@ export class AuthService {
     private readonly authRepository: AuthRepository,
   ) {}
 
-  async validateUser(dto: LoginDto): Promise<SafeUser> {
-    const user = await this.userService.findByEmail(dto.email);
-    if (
-      user &&
-      user.password &&
-      (await bcrypt.compare(dto.password, user.password!))
-    ) {
-      const { password, ...result } = user; // ...result -> password를 제외한 데이터를 result라는 변수에 담다
-      return result;
-    }
-    throw new UnauthorizedException('이메일 또는 비밀번호가 틀렸습니다.');
-  }
+  // async validateUser(dto: LoginDto): Promise<User> {
+  //   const user = await this.userService.findByEmail(dto.email);
+  //   if (
+  //     user &&
+  //     user.password &&
+  //     (await bcrypt.compare(dto.password, user.password!))
+  //   ) {
+  //     const { password, ...result } = user; // ...result -> password를 제외한 데이터를 result라는 변수에 담다
+  //     return result;
+  //   }
+  //   throw new UnauthorizedException('이메일 또는 비밀번호가 틀렸습니다.');
+  // }
 
   async googleValidate(reqUser: GoogleUserDto): Promise<User> {
     if (!reqUser || !reqUser.email) {
@@ -55,7 +54,7 @@ export class AuthService {
     }
   }
 
-  async login(user: SafeUser) {
+  async login(user: User): Promise<loginResultType> {
     const payload = { email: user.email, sub: user.uuid, name: user.name };
     return { access_token: this.jwtService.sign(payload) };
   }
