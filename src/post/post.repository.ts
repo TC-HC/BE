@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from '@prisma/client';
+import { Category, Post, User } from '@prisma/client';
 import { UserPostStat } from './types/UserPostStat.type';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Injectable()
 export class PostRepository {
@@ -74,7 +75,7 @@ export class PostRepository {
     });
   }
 
-  async findByCategoryId(categoryNames: string[]) {
+  async findByCategoryId(categoryNames: string[]): Promise<User[]> {
     return await this.prisma.user.findMany({
       where: {
         subscribedCategories: { some: { name: { in: categoryNames } } },
@@ -84,8 +85,7 @@ export class PostRepository {
 
   async getUserPostStats(
     authorId: string,
-    page: number,
-    limit: number,
+    { page, limit }: PaginationDto,
   ): Promise<UserPostStat[]> {
     const skip = (page - 1) * limit;
     const posts = await this.prisma.post.findMany({

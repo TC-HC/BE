@@ -1,9 +1,10 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { GetUser } from './decorators/get-user.decorator';
 import type { User } from '@prisma/client';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @ApiTags('소셜 인증 (Oauth)')
 @Controller('oauth')
@@ -21,7 +22,7 @@ export class OAuthController {
     return this.authService.login(user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Get('userInfo')
   @ApiOperation({ summary: '정보 조회' })
   async getUserInfo(@GetUser() user: User) {

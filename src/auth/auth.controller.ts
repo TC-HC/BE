@@ -6,7 +6,6 @@ import {
   Req,
   HttpCode,
 } from '@nestjs/common';
-import type { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
@@ -47,7 +46,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: '로그아웃' })
   @ApiBearerAuth()
-  async logout(@Req() req: Request) {
+  async logout(@GetUser() user: User) {
     return {
       statusCode: 200,
       message: '성공적으로 로그아웃되었습니다. client에서 토큰을 삭제해주세요.',

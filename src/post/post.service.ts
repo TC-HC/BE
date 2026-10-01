@@ -9,6 +9,7 @@ import { PostRepository } from './post.repository';
 import { NotificationService } from '@app/notification';
 import { Post, User } from '@prisma/client';
 import { PostStatsResponse } from './types/PostStatsResponse.type';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Injectable()
 export class PostService {
@@ -89,14 +90,12 @@ export class PostService {
 
   async getUserPostStats(
     userId: string,
-    page: number,
-    limit: number,
+    { page, limit }: PaginationDto,
   ): Promise<PostStatsResponse> {
-    const posts = await this.postRepository.getUserPostStats(
-      userId,
+    const posts = await this.postRepository.getUserPostStats(userId, {
       page,
       limit,
-    );
+    });
     return {
       data: posts,
       pagination: {

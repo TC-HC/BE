@@ -15,7 +15,6 @@ import { loginResultType } from './types/login-result.type';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     private readonly authRepository: AuthRepository,
   ) {}

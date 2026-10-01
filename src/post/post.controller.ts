@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Req,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
@@ -35,7 +34,10 @@ export class PostController {
     @Query() query: PaginationDto,
   ): Promise<PostStatsResponse> {
     const userId = user.uuid;
-    return this.postService.getUserPostStats(userId, query.page, query.limit);
+    const page = query.page;
+    const limit = query.limit;
+
+    return this.postService.getUserPostStats(userId, { page, limit });
   }
 
   @Post()
